@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <title>ClimaGlobe 3D </title>
+
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+ <link rel="stylesheet" href="style.css" />
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+ <script src="//unpkg.com/globe.gl"></script>
+</head>
+<body>
+ <header class="site-header">
+   <nav class="navbar" aria-label="Main Navigation">
+     <a href="#hero" class="logo">ClimaGlobe 3D 🌎</a>
+
+     <div class="nav-search">
+       <label for="city-input" class="visually-hidden">Search city</label>
+       <input id="city-input" type="text" placeholder="Search city..." autocomplete="off" />
+       <button id="search-button" aria-label="Search city">
+         <i class="fa-solid fa-magnifying-glass"></i>
+       </button>
+     </div>
+
+   <div class="btn-group">
+     <button class="burger"
+         type="button"
+         data-bs-toggle="dropdown"
+         ...>
+       <span class="line1"></span>
+       <span class="line2"></span>
+       <span class="line3"></span>
+     </button>
+     <ul class="nav-links" role="navigation">
+       <li><a href="#">Home</a></li>
+       <li><a href="#">About</a></li>
+       <li><a href="#">Contact</a></li>
+       <li><a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">Api Source</a></li>
+     </ul>
+   </div>
+   </nav>
+ </header>
+
+ <main>
+   <!-- 3D Globe Background -->
+   <div id="three-container" aria-hidden="true"></div>
+
+   <!-- Weather Info Panel -->
+   <section id="weather-panel" role="region" aria-live="polite">
+     <h2 id="location-name">Search a city</h2>
+     <div id="weather-details">
+       <p>Temperature: <strong id="temp-data">-- °C</strong></p>
+       <p>Condition: <strong id="condition-data">--</strong></p>
+       <p>Humidity: <strong id="humidity-data">-- %</strong></p>
+       <p>Wind: <strong id="wind-data">-- m/s</strong></p>
+     </div>
+   </section>
+ </main>
+
+ <footer class="site-footer">
+   <div class="footer-content">
+     <div class="footer-info">
+       <p>&copy; 2025 Arnab. All rights reserved.</p>
+       <p class="attribution">
+         Weather data powered by
+         <a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">
+           OpenWeatherMap
+         </a>.
+       </p>
+     </div>
+
+     <nav class="footer-nav" aria-label="Social media links">
+       <ul class="footer-links">
+         <li><a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a></li>
+         <li><a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a></li>
+         <li><a href="#" aria-label="Portfolio"><i class="fa-solid fa-user-circle"></i></a></li>
+       </ul>
+     </nav>
+   </div>
+ </footer>
+
+ <script src="main.js"></script>
+</body>
+</html>
