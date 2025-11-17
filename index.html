@@ -6,24 +6,19 @@
   <title>ClimaGlobe 3D - Interactive Weather Dashboard</title>
   <meta name="description" content="Explore global weather data and news on an interactive 3D globe" />
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
-  <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Three.js & Globe.gl -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="//unpkg.com/globe.gl"></script>
 </head>
 
 <body>
-  <!-- Header -->
   <header class="site-header">
     <nav class="navbar">
       <a href="#" class="logo">
@@ -31,7 +26,6 @@
         <span class="logo-text">ClimaGlobe 3D</span>
       </a>
 
-      <!-- Desktop Navigation -->
       <ul class="nav-links">
         <li><a href="#">Home</a></li>
         <li><a href="#">About</a></li>
@@ -41,7 +35,6 @@
       </ul>
 
       <div class="header-actions">
-        <!-- Theme Toggle -->
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
           <div class="theme-toggle-track">
             <i class="fas fa-moon theme-icon"></i>
@@ -50,7 +43,6 @@
           </div>
         </button>
 
-        <!-- Mobile Menu Button -->
         <button class="burger" id="burger-menu" aria-label="Toggle menu" aria-expanded="false">
           <span class="burger-line"></span>
           <span class="burger-line"></span>
@@ -60,12 +52,9 @@
     </nav>
   </header>
 
-  <!-- Main Content -->
   <main class="main-container">
-    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-content">
-        <!-- Search Bar -->
         <div class="search-container">
           <input 
             type="text" 
@@ -77,105 +66,146 @@
           <button id="search-button" class="search-button" aria-label="Search">
             <i class="fas fa-search"></i>
           </button>
+          
+          <div id="suggestions-panel" class="suggestions-panel"></div>
         </div>
 
-        <!-- Weather Panel -->
-        <section class="panel weather-panel" id="weather-panel">
-          <div class="panel-header">
-            <i class="fas fa-map-marker-alt panel-icon"></i>
-            <h2 id="location-name">Search a city to explore</h2>
+        <div class="tabs-container">
+          <div class="tab-buttons">
+            <button class="tab-button active" data-tab="now">Now</button>
+            <button class="tab-button" data-tab="forecast">Forecast</button>
+            <button class="tab-button" data-tab="news">News</button>
           </div>
 
-          <!-- Main Temperature Display -->
-          <div class="temperature-display">
-            <div class="temperature-value" id="temp-display">--°</div>
-            <div class="temperature-condition" id="condition-display">--</div>
-            <div class="temperature-feels" id="feels-like-display"></div>
+          <div class="tab-content">
+            <div class="tab-panel active" id="tab-now">
+              <section class="panel weather-panel" id="weather-panel">
+                <div class="panel-header">
+                  <i class="fas fa-map-marker-alt panel-icon"></i>
+                  <h2 id="location-name">Search a city</h2>
+                </div>
+
+                <div class="temperature-display">
+                  <div class="temperature-value" id="temp-display">--°</div>
+                  <div class="temperature-condition" id="condition-display">--</div>
+                  <div class="temperature-feels" id="feels-like-display"></div>
+                  <div class="personal-suggestion" id="personal-suggestion"></div>
+                </div>
+
+                <div class="weather-grid" id="weather-grid">
+                  <div class="weather-card">
+                    <div class="weather-card-header">
+                      <i class="fas fa-droplet" style="color: #60a5fa;"></i>
+                      <span>Humidity</span>
+                    </div>
+                    <div class="weather-card-value" id="humidity-data">--%</div>
+                  </div>
+
+                  <div class="weather-card">
+                    <div class="weather-card-header">
+                      <i class="fas fa-wind" style="color: #22d3ee;"></i>
+                      <span>Wind</span>
+                    </div>
+                    <div class="weather-card-value" id="wind-data">-- m/s</div>
+                  </div>
+
+                  <div class="weather-card">
+                    <div class="weather-card-header">
+                      <i class="fas fa-gauge-high" style="color: #a78bfa;"></i>
+                      <span>Pressure</span>
+                    </div>
+                    <div class="weather-card-value" id="pressure-data">-- hPa</div>
+                  </div>
+
+                  <div class="weather-card">
+                    <div class="weather-card-header">
+                      <i class="fas fa-eye" style="color: #4ade80;"></i>
+                      <span>Visibility</span>
+                    </div>
+                    <div class="weather-card-value" id="visibility-data">-- km</div>
+                  </div>
+
+                  <div class="weather-card">
+                    <div class="weather-card-header">
+                      <i class="fas fa-sunrise" style="color: #fb923c;"></i>
+                      <span>Sunrise</span>
+                    </div>
+                    <div class="weather-card-value" id="sunrise-data">--:--</div>
+                  </div>
+
+                  <div class="weather-card">
+                    <div class="weather-card-header">
+                      <i class="fas fa-sunset" style="color: #f87171;"></i>
+                      <span>Sunset</span>
+                    </div>
+                    <div class="weather-card-value" id="sunset-data">--:--</div>
+                  </div>
+                </div>
+
+                <div class="panel-spinner" id="weather-spinner"></div>
+              </section>
+
+              <section class="panel aqi-panel" id="aqi-panel" style="display: none;">
+                <div class="panel-header">
+                  <i class="fas fa-smog panel-icon"></i>
+                  <h2>Air Quality Index</h2>
+                </div>
+                <div class="aqi-content">
+                  <div class="aqi-value" id="aqi-value">--</div>
+                  <div classs="aqi-text">
+                    <div class="aqi-category" id="aqi-category">--</div>
+                    <div class="aqi-description">Pollutant: <span id="aqi-pollutant">--</span></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+            
+            <div class="tab-panel" id="tab-forecast">
+              <section class="panel forecast-panel" id="hourly-forecast-panel">
+                <div class="panel-header">
+                  <i class="fas fa-clock panel-icon"></i>
+                  <h2>Hourly Forecast</h2>
+                </div>
+                <div class="hourly-forecast-container" id="hourly-forecast-container">
+                  </div>
+              </section>
+              
+              <section class="panel forecast-panel" id="daily-forecast-panel">
+                <div class="panel-header">
+                  <i class="fas fa-calendar-alt panel-icon"></i>
+                  <h2>Daily Forecast</h2>
+                </div>
+                <div class="daily-forecast-container" id="daily-forecast-container">
+                  </div>
+              </section>
+            </div>
+
+            <div class="tab-panel" id="tab-news">
+              <section class="panel news-panel" id="news-panel">
+                <div class="panel-header">
+                  <i class="fas fa-newspaper panel-icon"></i>
+                  <h2>Weather News</h2>
+                </div>
+                <div class="news-container" id="news-container">
+                  <div class="news-loading" id="news-loading-message">Search a city to see related news.</div>
+                </div>
+                <div class="panel-spinner" id="news-spinner"></div>
+              </section>
+            </div>
+
           </div>
-
-          <!-- Weather Details Grid -->
-          <div class="weather-grid" id="weather-grid">
-            <div class="weather-card">
-              <div class="weather-card-header">
-                <i class="fas fa-droplet" style="color: #60a5fa;"></i>
-                <span>Humidity</span>
-              </div>
-              <div class="weather-card-value" id="humidity-data">--%</div>
-            </div>
-
-            <div class="weather-card">
-              <div class="weather-card-header">
-                <i class="fas fa-wind" style="color: #22d3ee;"></i>
-                <span>Wind</span>
-              </div>
-              <div class="weather-card-value" id="wind-data">-- m/s</div>
-            </div>
-
-            <div class="weather-card">
-              <div class="weather-card-header">
-                <i class="fas fa-gauge-high" style="color: #a78bfa;"></i>
-                <span>Pressure</span>
-              </div>
-              <div class="weather-card-value" id="pressure-data">-- hPa</div>
-            </div>
-
-            <div class="weather-card">
-              <div class="weather-card-header">
-                <i class="fas fa-eye" style="color: #4ade80;"></i>
-                <span>Visibility</span>
-              </div>
-              <div class="weather-card-value" id="visibility-data">-- km</div>
-            </div>
-
-            <div class="weather-card">
-              <div class="weather-card-header">
-                <i class="fas fa-sunrise" style="color: #fb923c;"></i>
-                <span>Sunrise</span>
-              </div>
-              <div class="weather-card-value" id="sunrise-data">--:--</div>
-            </div>
-
-            <div class="weather-card">
-              <div class="weather-card-header">
-                <i class="fas fa-sunset" style="color: #f87171;"></i>
-                <span>Sunset</span>
-              </div>
-              <div class="weather-card-value" id="sunset-data">--:--</div>
-            </div>
-          </div>
-
-          <!-- Loading Spinner -->
-          <div class="panel-spinner" id="weather-spinner"></div>
-        </section>
-
-        <!-- News Panel -->
-        <section class="panel news-panel" id="news-panel">
-          <div class="panel-header">
-            <i class="fas fa-newspaper panel-icon"></i>
-            <h2>Weather News</h2>
-          </div>
-
-          <div class="news-container" id="news-container">
-            <div class="news-loading">Loading news...</div>
-          </div>
-
-          <!-- Loading Spinner -->
-          <div class="panel-spinner" id="news-spinner"></div>
-        </section>
-      </div>
+        </div>
+        </div>
     </aside>
 
-    <!-- Globe Container -->
     <div class="globe-wrapper">
       <div id="globe-container"></div>
       
-      <!-- Globe Instructions -->
       <div class="globe-instructions">
         <i class="fas fa-info-circle"></i>
-        <span><strong>Tip:</strong> Drag to rotate • Scroll to zoom • Click a location</span>
+        <span><strong>Tip:</strong> Drag to rotate</span>
       </div>
 
-      <!-- Globe Loading -->
       <div class="globe-loading" id="globe-loading">
         <div class="globe-loading-spinner"></div>
         <p>Loading globe...</p>
@@ -183,7 +213,6 @@
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-info">
@@ -210,10 +239,8 @@
     </div>
   </footer>
 
-  <!-- Notification Container -->
   <div id="notification-container"></div>
 
-  <!-- Main Script -->
   <script src="main.js"></script>
 </body>
 </html>
