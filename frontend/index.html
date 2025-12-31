@@ -34,8 +34,7 @@
         
         <li class="favorites-nav-section">
           <h4>Favorites</h4>
-          <ul id="favorites-list">
-            </ul>
+          <ul id="favorites-list"></ul>
         </li>
       </ul>
 
@@ -78,6 +77,11 @@
             placeholder="E.g Vadodara, Kanpur, Gorakhpur"
             autocomplete="off"
           />
+          
+          <button id="voice-btn" class="voice-button" aria-label="Voice Search" title="Speak to search">
+            <i class="fas fa-microphone"></i>
+          </button>
+
           <button id="locate-button" class="locate-button" aria-label="Find my location">
             <i class="fas fa-crosshairs"></i>
           </button>
@@ -107,13 +111,18 @@
                     <i class="far fa-heart"></i> <i class="fas fa-heart"></i> </button>
                 </div>
                 
-                <div class="local-time" id="local-time-display">
-                  </div>
+                <div class="local-time" id="local-time-display"></div>
 
                 <div class="temperature-display">
                   <div class="temperature-value" id="temp-display">--°</div>
                   <div class="temperature-condition" id="condition-display">--</div>
                   <div class="temperature-feels" id="feels-like-display"></div>
+                  
+                  <div id="clothing-panel" class="clothing-panel" style="display: none;">
+                    <div class="cloth-icon" id="cloth-icon">👕</div>
+                    <div class="cloth-text" id="cloth-text"></div>
+                  </div>
+
                   <div class="personal-suggestion" id="personal-suggestion"></div>
                 </div>
 
@@ -191,8 +200,7 @@
                   <i class="fas fa-clock panel-icon"></i>
                   <h2>Hourly Forecast</h2>
                 </div>
-                <div class="hourly-forecast-container" id="hourly-forecast-container">
-                  </div>
+                <div class="hourly-forecast-container" id="hourly-forecast-container"></div>
               </section>
               
               <section class="panel forecast-panel" id="daily-forecast-panel">
@@ -200,8 +208,7 @@
                   <i class="fas fa-calendar-alt panel-icon"></i>
                   <h2>Daily Forecast</h2>
                 </div>
-                <div class="daily-forecast-container" id="daily-forecast-container">
-                  </div>
+                <div class="daily-forecast-container" id="daily-forecast-container"></div>
               </section>
             </div>
 
@@ -220,7 +227,7 @@
 
           </div>
         </div>
-        </div>
+      </div>
     </aside>
 
     <div class="globe-wrapper">
