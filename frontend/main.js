@@ -1,7 +1,5 @@
 // ==================== API KEYS ====================
-// Use your simple, free API key here.
-const OPENWEATHER_KEY = '';
-const GNEWS_KEY = '';
+const OPENWEATHER_KEY = ''; 
 
 // ==================== DOM ELEMENTS ====================
 // Theme Toggle
@@ -20,6 +18,7 @@ const searchButton = document.getElementById('search-button');
 const locateButton = document.getElementById('locate-button');
 const suggestionsPanel = document.getElementById('suggestions-panel');
 const searchContainer = document.querySelector('.search-container');
+const voiceBtn = document.getElementById('voice-btn'); // NEW
 
 // Tabs
 const tabButtons = document.querySelectorAll('.tab-button');
@@ -43,6 +42,11 @@ const pressureData = document.getElementById('pressure-data');
 const visibilityData = document.getElementById('visibility-data');
 const sunriseData = document.getElementById('sunrise-data');
 const sunsetData = document.getElementById('sunset-data');
+
+// NEW: Clothing Panel Elements
+const clothingPanel = document.getElementById('clothing-panel');
+const clothIcon = document.getElementById('cloth-icon');
+const clothText = document.getElementById('cloth-text');
 
 // AQI Panel
 const aqiPanel = document.getElementById('aqi-panel');
@@ -504,6 +508,10 @@ function updateWeatherUI(data, locationString, units) {
   sunsetData.textContent = formatTime(data.sys.sunset, data.timezone);
   
   updatePersonalSuggestion(data.weather[0].main, data.main.temp, units);
+
+  // === NEW: Update dynamic features ===
+  updateDynamicBackground(data.weather[0].main, data.weather[0].icon);
+  updateClothingSuggestion(data.main.temp, data.weather[0].main, units);
 }
 
 // === UPDATED: Now accepts 'units' for personal message ===
@@ -598,6 +606,7 @@ function resetWeatherUI() {
   sunsetData.textContent = '--:--';
   
   aqiPanel.style.display = 'none';
+  clothingPanel.style.display = 'none'; // Hide clothing panel
   hourlyForecastContainer.innerHTML = '';
   dailyForecastContainer.innerHTML = '';
   newsContainer.innerHTML = `<div class="news-loading" id="news-loading-message">Search a city to see related news.</div>`;
@@ -760,6 +769,102 @@ function getAQIDescription(aqi) {
   }
 }
 
+// === NEW: Helper function for Dynamic Backgrounds ===
+function updateDynamicBackground(weatherMain, iconCode) {
+  const body = document.body;
+  // Remove existing theme classes
+  body.classList.remove('theme-rain', 'theme-clear', 'theme-clouds', 'theme-snow', 'theme-night');
+  
+  // Check for Night first (icon ends in 'n')
+  if (iconCode.includes('n')) {
+    body.classList.add('theme-night');
+    return;
+  }
+
+  const condition = weatherMain.toLowerCase();
+  
+  if (condition.includes('rain') || condition.includes('drizzle') || condition.includes('storm')) {
+    body.classList.add('theme-rain');
+  } else if (condition.includes('snow')) {
+    body.classList.add('theme-snow');
+  } else if (condition.includes('cloud') || condition.includes('mist') || condition.includes('haze')) {
+    body.classList.add('theme-clouds');
+  } else {
+    body.classList.add('theme-clear');
+  }
+}
+
+// === NEW: Helper function for Clothing Advice ===
+function updateClothingSuggestion(temp, condition, units) {
+  // Convert to Celsius for logic if unit is Imperial
+  const tempC = units === 'imperial' ? (temp - 32) * 5/9 : temp;
+  const cond = condition.toLowerCase();
+  
+  let icon = "👕";
+  let text = "Comfortable clothes are fine.";
+
+  if (cond.includes('rain') || cond.includes('storm')) {
+    icon = "☔";
+    text = "Don't forget an umbrella and a waterproof jacket!";
+  } else if (tempC < 5) {
+    icon = "🧣";
+    text = "It's freezing! Wear a heavy coat, scarf, and gloves.";
+  } else if (tempC < 15) {
+    icon = "🧥";
+    text = "Chilly outside. A jacket or hoodie is recommended.";
+  } else if (tempC > 28) {
+    icon = "🕶️";
+    text = "It's hot! Wear light cotton clothes and sunglasses.";
+  } else {
+    icon = "👕";
+    text = "Pleasant weather. A t-shirt and jeans work great.";
+  }
+
+  clothIcon.textContent = icon;
+  clothText.textContent = text;
+  clothingPanel.style.display = 'flex';
+}
+
+// === NEW: Init Voice Search ===
+function initVoiceSearch() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+
+    voiceBtn.addEventListener('click', () => {
+      recognition.start();
+      voiceBtn.classList.add('listening');
+    });
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      // Remove trailing punctuation
+      const cleanTranscript = transcript.replace(/[.,]/g, '');
+      
+      cityInput.value = cleanTranscript;
+      voiceBtn.classList.remove('listening');
+      
+      // Trigger search immediately
+      getCitySuggestions(); 
+    };
+
+    recognition.onerror = () => {
+      voiceBtn.classList.remove('listening');
+      showNotification("Could not understand audio", "error");
+    };
+
+    recognition.onend = () => {
+      voiceBtn.classList.remove('listening');
+    };
+  } else {
+    voiceBtn.style.display = 'none'; // Hide if not supported
+    console.log("Web Speech API not supported");
+  }
+}
+
 // ==================== EVENT LISTENERS (Updated!) ====================
 
 // Theme toggle
@@ -829,6 +934,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   loadFavorites(); // === NEW: Load favorites from storage
   renderFavoritesList(); // === NEW: Display favorites in mobile menu
+  initVoiceSearch(); // === NEW: Initialize Voice Search
 
   // Load last searched city
   const lastCity = localStorage.getItem('lastCity');
