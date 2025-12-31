@@ -160,7 +160,9 @@ ul {
   gap: 1rem;
 }
 
-/* === NEW: Units Toggle === */
+/* ==================== TOGGLES (UPDATED COLORS) ==================== */
+
+/* --- 1. UNITS TOGGLE --- */
 .units-toggle {
   position: relative;
   width: 3.5rem;
@@ -172,7 +174,7 @@ ul {
   position: relative;
   width: 100%;
   height: 100%;
-  background: var(--glass);
+  background: rgba(255, 255, 255, 0.1); /* Glass track */
   border: 1px solid var(--glass-border);
   border-radius: 2rem;
   display: flex;
@@ -188,7 +190,7 @@ ul {
 
 .unit-toggle-label {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-secondary);
   transition: color 0.3s ease;
   z-index: 1;
@@ -199,31 +201,29 @@ ul {
   left: 0.2rem;
   width: 1.25rem;
   height: 1.25rem;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-glow) 100%);
   border-radius: 50%;
-  transition: transform 0.3s ease;
-  box-shadow: 0 2px 8px var(--shadow-glow);
+  transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  
+  /* DEFAULT STATE: BLUE */
+  background: var(--accent); 
 }
 
-/* This class will be toggled by JS */
+/* SWITCHED STATE: WHITE */
 .units-toggle.imperial .units-toggle-thumb {
   transform: translateX(1.75rem);
-}
-.units-toggle.imperial .unit-toggle-label:first-child { /* °C */
-  color: var(--text-secondary);
-}
-.units-toggle.imperial .unit-toggle-label:last-child { /* °F */
-  color: var(--text-primary);
-}
-.units-toggle:not(.imperial) .unit-toggle-label:first-child { /* °C */
-  color: var(--text-primary);
-}
-.units-toggle:not(.imperial) .unit-toggle-label:last-child { /* °F */
-  color: var(--text-secondary);
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6); /* White Glow */
 }
 
+/* Active Label Colors */
+.units-toggle.imperial .unit-toggle-label:first-child { color: var(--text-secondary); }
+.units-toggle.imperial .unit-toggle-label:last-child { color: #ffffff; } /* F becomes white */
+.units-toggle:not(.imperial) .unit-toggle-label:first-child { color: var(--accent); } /* C is blue */
+.units-toggle:not(.imperial) .unit-toggle-label:last-child { color: var(--text-secondary); }
 
-/* Theme Toggle */
+
+/* --- 2. THEME TOGGLE --- */
 .theme-toggle {
   position: relative;
   width: 3.5rem;
@@ -235,7 +235,7 @@ ul {
   position: relative;
   width: 100%;
   height: 100%;
-  background: var(--glass);
+  background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--glass-border);
   border-radius: 2rem;
   display: flex;
@@ -251,8 +251,8 @@ ul {
 
 .theme-icon {
   font-size: 0.75rem;
-  color: var(--accent);
-  transition: opacity 0.3s ease;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
   z-index: 1;
 }
 
@@ -261,23 +261,27 @@ ul {
   left: 0.2rem;
   width: 1.25rem;
   height: 1.25rem;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-glow) 100%);
   border-radius: 50%;
-  transition: transform 0.3s ease;
-  box-shadow: 0 2px 8px var(--shadow-glow);
+  transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  /* DEFAULT STATE (Dark Mode): BLUE */
+  background: var(--accent);
 }
 
+/* SWITCHED STATE (Light Mode): WHITE */
 [data-theme='light'] .theme-toggle-thumb {
   transform: translateX(1.75rem);
+  background: #ffffff; /* Becomes Sun White */
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6); /* Gold/White Glow */
 }
 
-[data-theme='light'] .theme-icon.fa-moon {
-  opacity: 0.3;
-}
+/* Icon visibility logic */
+[data-theme='light'] .theme-icon.fa-moon { opacity: 0.5; color: var(--text-secondary); }
+[data-theme='light'] .theme-icon.fa-sun { opacity: 1; color: #ffa500; } /* Sun turns orange/gold */
 
-[data-theme='dark'] .theme-icon.fa-sun {
-  opacity: 0.3;
-}
+[data-theme='dark'] .theme-icon.fa-sun { opacity: 0.5; color: var(--text-secondary); }
+[data-theme='dark'] .theme-icon.fa-moon { opacity: 1; color: var(--accent); } /* Moon turns Blue */
 
 /* Burger Menu */
 .burger {
@@ -365,7 +369,7 @@ ul {
   background: var(--glass);
   border: 1px solid var(--glass-border);
   border-radius: 1.5rem;
-  padding: 0 5.5rem 0 1.25rem; /* Make room for 2 buttons */
+  padding: 0 8.5rem 0 1.25rem; /* Make room for 3 buttons now */
   color: var(--text-primary);
   font-size: 0.95rem;
   font-family: inherit;
@@ -1124,4 +1128,105 @@ ul {
   .units-toggle.imperial .units-toggle-thumb {
     transform: translateX(1.5rem);
   }
+}
+
+/* ==================== NEW FEATURES ==================== */
+
+/* 1. Voice Search Button Styling */
+.voice-button {
+  position: absolute;
+  right: 6rem; /* Positioned left of the locate button */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.25rem;
+  height: 2.25rem;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  z-index: 5;
+}
+
+.voice-button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.voice-button.listening {
+  color: #ff4757;
+  border-color: #ff4757;
+  animation: pulse 1.5s infinite;
+}
+
+/* 2. Clothing Card (Glassmorphism) */
+.clothing-panel {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.15); /* Brighter glass */
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.clothing-panel:hover {
+  transform: translateY(-2px);
+}
+
+.cloth-icon {
+  font-size: 2rem;
+  background: rgba(255,255,255,0.2);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.cloth-text {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* 3. Dynamic Background Themes */
+/* Note: We use !important to override the default linear-gradient */
+
+body.theme-rain {
+  background: linear-gradient(135deg, #203a43, #2c5364) !important;
+}
+
+body.theme-clear {
+  background: linear-gradient(135deg, #2980b9, #6dd5fa, #ffffff) !important;
+}
+
+body.theme-clouds {
+  background: linear-gradient(135deg, #304352, #d7d2cc) !important;
+}
+
+body.theme-snow {
+  background: linear-gradient(135deg, #83a4d4, #b6fbff) !important;
+}
+
+body.theme-night {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364) !important;
+}
+
+/* Pulse animation for voice */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
 }
